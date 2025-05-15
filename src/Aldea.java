@@ -31,7 +31,7 @@ public class Aldea {
 
     public void eliminarAldeano(String nombre){
         System.out.println("Vamos a intentar eliminar al aldeano " + nombre);
-        Aldeano aEliminar = buscarAldeanoNombre(nombre);
+        Aldeano aEliminar = buscarAldeanoNombreEliminar(nombre);
 
         if (aEliminar == null){
             System.out.println("No hay ningún aldeano con ese nombre");
@@ -42,17 +42,15 @@ public class Aldea {
         Integer idAldeanoEliminar = null;
 
         for(Map.Entry<Integer,Aldeano> a : registro.entrySet()){
-            System.out.println("Revisamos ID: " + a.getKey() + " con aldeano: " + a.getValue().getNombre());
             if (a.getValue().equals(aEliminar)){
                 encontrado = true;
                 idAldeanoEliminar = a.getKey();
-                System.out.println("Encontrado. ID a eliminar: " + idAldeanoEliminar);
             }
         }
 
         if (encontrado && idAldeanoEliminar != null){
             registro.remove(idAldeanoEliminar);
-            System.out.println("Se ha eliminado el aldeano con ID: " + idAldeanoEliminar);
+            System.out.println("Se ha eliminado el aldeano: " + buscarAldeanoNombreEliminar(nombre) + ", con ID: " + idAldeanoEliminar);
         }else {
             System.out.println("El aldeano no está registrado");
         }
@@ -80,7 +78,7 @@ public class Aldea {
             }
         }
         registro.entrySet().stream()
-                .sorted()
+                .sorted(comparador)
                 .forEach(a -> System.out.println(a.getKey() + " - " + a.getValue()));
     }
 
@@ -88,7 +86,19 @@ public class Aldea {
      * Buscar por nombre para saber qué aldeano quieres seleccionar
      */
 
-    public Aldeano buscarAldeanoNombre (String nombre) {
+    public void buscarAldeanoNombre (String nombre) {
+        Scanner sc = new Scanner(System.in);
+        int registros = 0;
+        for (Map.Entry<Integer, Aldeano> a : registro.entrySet()) {
+            if (a.getValue().getNombre().contains(nombre)) {
+                registros++;
+                System.out.println(a.getKey() + " - " + a.getValue());
+            }
+            else System.out.println("No existe ningún aldeano con ese nombre");
+        }
+    }
+
+    public Aldeano buscarAldeanoNombreEliminar (String nombre) {
         Scanner sc = new Scanner(System.in);
         int registros = 0;
         for (Map.Entry<Integer, Aldeano> a : registro.entrySet()) {
@@ -112,23 +122,14 @@ public class Aldea {
      * Busca por profesión y muestra que aldeano quieres elegir
      */
 
-    public Aldeano buscarProfesion(String profesion){
+    public void buscarProfesion(String profesion) {
         Scanner sc = new Scanner(System.in);
         int registros = 0;
-        for (Map.Entry<Integer, Aldeano> a : registro.entrySet()){
-            if (a.getValue().getProfesion().contains(profesion)){
-                registros ++;
+        for (Map.Entry<Integer, Aldeano> a : registro.entrySet()) {
+            if (a.getValue().getProfesion().contains(profesion)) {
+                registros++;
                 System.out.println(a.getKey() + " - " + a.getValue());
             }
-        }
-
-        if (registros > 0){
-            System.out.println("\n Clave del aldeano a eliminar: ");
-            int claveBuscada= sc.nextInt();
-            return registro.get(claveBuscada);
-        }else {
-            System.out.println("No hay ningún aldeano con esa profesión");
-            return null;
         }
     }
 
@@ -137,7 +138,10 @@ public class Aldea {
      */
 
     public void mostrarAldeanos(){
-        System.out.println(this);
+        System.out.println("\n\t------------ALDEANOS------------");
+        for (Aldeano a : registro.values()){
+            System.out.println("\t" + a.toString());
+        }
     }
 
     /**
