@@ -23,6 +23,7 @@ public class Aldea {
 
     public void agregarAldeano(Aldeano a){
         registro.put(registro.size() + 1,a);
+        guardarDatos();
     }
 
     /**
@@ -54,6 +55,8 @@ public class Aldea {
         }else {
             System.out.println("El aldeano no está registrado");
         }
+
+        guardarDatos();
     }
 
     /**
